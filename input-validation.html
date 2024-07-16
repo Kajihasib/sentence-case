@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Input Validation</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      #myForm {
+        max-width: 700px;
+        padding: 50px;
+        background: #fff;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 7px;
+        box-sizing: border-box;
+        margin: 100px auto;
+      }
+      .input-style {
+        margin-bottom: 25px;
+      }
+      .input-style label {
+        font-size: 16px;
+        margin-bottom: 10px;
+        display: block;
+      }
+      .input-style input,
+      .input-style textarea {
+        width: 100%;
+        height: 50px;
+        border: 1px solid #eeee;
+        padding: 10px 15px;
+        box-sizing: border-box;
+        transition: all 0.4s ease-in-out 0s;
+        border-radius: 5px;
+      }
+      .input-style textarea {
+        height: 150px;
+      }
+      .input-style input:focus,
+      .input-style textarea:focus {
+        outline: none;
+        border-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="myForm">
+      <div class="input-style">
+        <label for="">Text Input</label>
+        <input type="text" />
+      </div>
+      <div class="input-style">
+        <label for="">Email Input</label>
+        <input type="email" />
+      </div>
+      <div class="input-style">
+        <label for="">Textarea</label>
+        <textarea></textarea>
+      </div>
+      <!-- <label for="textInput">Text Input:</label>
+      <input type="text" id="textInput" name="textInput" />
+      <span id="textInputError" style="color: red"></span> -->
+    </form>
+
+    <script>
+      $(document).ready(function () {
+        // Regular expression to prevent any code injection (basic sanitization)
+        const codeInjectionRegex =
+          /<script|<\/script>|<[^>]+>|php|javascript|jquery|<\?php|<\/|alert|console\.log|SELECT\s+.*\s+FROM|INSERT\s+INTO|UPDATE\s+.*\s+SET|DELETE\s+FROM|DROP\s+TABLE|--|;|\bexec\b|\bunion\b|\bwaitfor\b|\bshell\b|import\s+os|import\s+sys|def\s+|class\s+|self\.|#include\s+<|using\s+namespace|std::|#define|int\s+main|for\s+\(|while\s+\(|if\s+\(|else\s+|elif\s+|try\s+|except\s+|print\(|input\(/gi;
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        function validateTextInput() {
+          const textInput = $(
+            "input[type='text'],input[type='email'],textarea"
+          ).val();
+          if (codeInjectionRegex.test(textInput)) {
+            $(this)
+              .parent(".input-style")
+              .append(
+                '<span class="error-message">Invalid characters detected in text input.</span>'
+              );
+          } else {
+            $("#textInputError").text("");
+            $(this).parent(".input-style").find(".error-message").remove();
+          }
+        }
+
+        $("input[type='text'],input[type='email'],textarea").on(
+          "change",
+          validateTextInput
+        );
+      });
+    </script>
+  </body>
+</html>
